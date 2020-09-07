@@ -9,7 +9,7 @@ $active = isset($_GET['active'])
             && ($_GET['active'] == '1'  || $_GET['active'] == '0' )? $_GET['active'] : null;
 $todo = isset($_GET['todo']) && $_GET['todo'] != '' ? $_GET['todo'] : null;  
 
-if($completed){
+if($completed != null){
     $sql = "UPDATE Todos SET completed='$completed' WHERE id=$id";
 
     if ($conn->query($sql) === TRUE) {
@@ -20,7 +20,7 @@ if($completed){
     
 }
 
-if($active){
+if($active != null){
     $sql = "UPDATE Todos SET active='$active' WHERE id=$id";
 
     if ($conn->query($sql) === TRUE) {
@@ -31,7 +31,7 @@ if($active){
     
 }
   
-if($todo){
+if($todo != null){
     $sql = "UPDATE Todos SET todo='$todo' WHERE id=$id";
 
     if ($conn->query($sql) === TRUE) {
