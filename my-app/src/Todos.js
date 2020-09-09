@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {Typography ,CssBaseline , Input ,Checkbox ,Chip,Container} from '@material-ui/core';
 
+
+// Todos component
 export default function Todos() {
-	const [todos, setTodos] = useState(null);
+    
+    // the component hooks
+    const [todos, setTodos] = useState(null);
 	const [inputs, setInputs] = useState({});
 
+    // handeling the input change event
 	const handleInputChange = (event, id) => {
 		
         const { name, value } = event.target;
@@ -21,7 +27,8 @@ export default function Todos() {
 				getTodos();
 			});
 		}
-	};
+    };
+    // checking if enter pressed and add new todo to the list
 	const handleKeyDown = (event) => {
 		if (event.key === "Enter") {
 			axios.get(
@@ -32,6 +39,7 @@ export default function Todos() {
 		}
 	};
 
+    // delete todo from the list
 	const deleteTodo = (id) => {
 		axios.get(`http://localhost/matrix/api/delete.php?id=${id}`).then(
 			function (response) {
@@ -39,7 +47,9 @@ export default function Todos() {
 				getTodos();
 			}
 		);
-	};
+    };
+    
+    // update the status of todo
 	const setTodoStatus = (event, id) => {
 		let completed = event.target.checked ? "1" : "0";
 		let active = event.target.checked ? "0" : "1";
@@ -50,7 +60,10 @@ export default function Todos() {
 			console.log(response);
 			getTodos();
 		});
-	};
+    };
+    
+    // render all todos that are stored in the database
+
 	const getTodos = () => {
 		axios.get(`http://localhost/matrix/api/select.php`).then(function (
 			response
@@ -64,14 +77,14 @@ export default function Todos() {
                     //setInputData(todo.todo)
                     console.log("inputs", inputs)
 					return (
+                        
 						<div key={todo.id}>
-							<input
-								type="checkbox"
+							<Checkbox 
 								onChange={(event) =>
 									setTodoStatus(event, todo.id)
 								}
 							/>
-							<input
+							<Input
 								name={todo.id}
 								type="text"
 								style={{ textDecoration: lineThrough }}
@@ -85,10 +98,9 @@ export default function Todos() {
                                 }
                                 onKeyDown={(e) => handleInputChange(e, todo.id)}
 							/>
-							<button onClick={() => deleteTodo(todo.id)}>
-								X
-							</button>
+                            <Chip label="Delete" onDelete={() => deleteTodo(todo.id)} color="primary" />
 						</div>
+                        
 					);
 				});
 			setTodos(todosList);
@@ -100,7 +112,8 @@ export default function Todos() {
 	}, [inputs]);
 
 	return (
-		<div>
+		<Container maxWidth="sm">
+            <CssBaseline />
 			<div>
 				<input
 					onKeyDown={handleKeyDown}
@@ -109,6 +122,6 @@ export default function Todos() {
 				/>
 			</div>
 			{todos}
-		</div>
+            </Container>
 	);
 }
